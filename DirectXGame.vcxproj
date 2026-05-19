@@ -157,6 +157,7 @@
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="afine.cpp" />
     <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChipField.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="afine.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="MapChipField.h" />
     <ClInclude Include="MathUtility.h" />

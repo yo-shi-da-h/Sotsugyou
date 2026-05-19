@@ -91,7 +91,7 @@ void GameScene::Update() {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
 				continue;
-			worldTransformBlock->UpdateMatarix();
+			worldTransformBlock->UpdateMatrix();
 		}
 	}
 	
@@ -238,7 +238,7 @@ void GameScene::ScrollBlocks() {
 			if (!worldTransformBlocks_[i][j]) continue;
 
 			worldTransformBlocks_[i][j]->translation_.x -= kScrollSpeed;
-			worldTransformBlocks_[i][j]->UpdateMatarix();
+			worldTransformBlocks_[i][j]->UpdateMatrix();
 		}
 	}
 }
@@ -282,7 +282,7 @@ void GameScene::RecycleBlockColumn() {
 			if (worldTransformBlocks_[i][leftColumn]) {
 				worldTransformBlocks_[i][leftColumn]->translation_.x =
 					rightMostX + kBlockWidth;
-				worldTransformBlocks_[i][leftColumn]->UpdateMatarix();
+				worldTransformBlocks_[i][leftColumn]->UpdateMatrix();
 			}
 		}
 	}

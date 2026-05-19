@@ -72,7 +72,7 @@ void Player::Update() {
 	TurnControll();
 
 	// 行列計算
-	worldTransform_.UpdateMatarix();
+	worldTransform_.UpdateMatrix();
 
 	MapChipField::IndexSet indexSet;
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_);
@@ -80,13 +80,13 @@ void Player::Update() {
 	MapChipType mapChipType;
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
 
-	worldTransform2_.UpdateMatarix();
-	worldTransform3_.UpdateMatarix();
-	worldTransform4_.UpdateMatarix();
+	worldTransform2_.UpdateMatrix();
+	worldTransform3_.UpdateMatrix();
+	worldTransform4_.UpdateMatrix();
 
 #ifdef DEBUG
 	ImGui::Begin("a");
-	// パブリック変数からプライベート変数（末尾アンダースコア）に変更したものを参照
+	
 	ImGui::InputInt("2", &switchNumber_);
 	ImGui::End();
 #endif // DEBUG
@@ -96,7 +96,7 @@ void Player::Draw() {
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, *playerCamera_);
 
-	// 隠蔽したメンバ変数名（末尾アンダースコア）に合わせて修正
+	
 	if (isFrontDoor_ == true) {
 		model2_->Draw(worldTransform2_, *playerCamera_);
 	}
@@ -125,8 +125,8 @@ AABB Player::GetAABB() {
 
 // 外部から安全に呼び出される死亡フラグ変更処理
 bool Player::Dead() {
-	isDead_ = true;
-	return false;
+    isDead_ = true;
+    return true; // 死亡したため、正しくtrueを返す
 }
 
 void Player::UpdateBlockAndTrapPosition(KamataEngine::WorldTransform& worldTransform, MapChipField* mapChipField, float fallSpeed) {

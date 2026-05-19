@@ -11,18 +11,19 @@
 #include <iostream>
 #include <list>
 #include <numbers>
+#include "Character.h"
 
 class MapChipField;
 
-class Player {
+class Player : public Character{
 public:
 	// 左右（外部の描画クラス等で使う可能性があるならpublicでOK）
 	enum class LRDirection { kRight, kLeft };
 
 	// 外部から呼び出す基本関数
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* viewProjection, const KamataEngine::Vector3& position);
-	void Update();
-	void Draw();
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* viewProjection, const KamataEngine::Vector3& position)override;
+	void Update()override;
+	void Draw()override;
 
 	// 外部に安全に公開するGetter / Setter
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
