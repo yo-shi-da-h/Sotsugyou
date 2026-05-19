@@ -85,6 +85,7 @@ private:
 	int itemCount_ = 0;
 	int itemBatteryCount_ = 0;
 	int switchNumber_ = 0;
+	int GetSwitchNumber() const { return switchNumber_; }
 	bool isFrontDoor_ = false;
 	bool isFrontDoor1_ = false;
 

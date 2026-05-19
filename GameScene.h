@@ -34,7 +34,8 @@ private:
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	Player* player_ = nullptr;
+	//Player* player_ = nullptr;
+	Character* player_ = nullptr;
 	
 	//Enemy* enemy_ = nullptr;
 

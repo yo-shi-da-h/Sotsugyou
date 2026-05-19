@@ -17,6 +17,7 @@ GameScene::~GameScene() {
 	delete modelPlayer_;
 	//delete modelEnemy_; // 追加
 	delete player_;
+    player_ = nullptr;
 	delete modelBlock_;
 	delete debugCamera_;
 	delete mapChipField_;
@@ -189,7 +190,7 @@ void GameScene::GenerateBlocks() {
 
 void GameScene::SwitchStage() {
 
-	if (player_->switchNumber_ == 1) {
+	if (player_->GetSwitchNumber() == 1) {
 
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -203,14 +204,14 @@ void GameScene::SwitchStage() {
 		mapChipField_->LoadMapChipCsv("Resources/MapTest.csv");
 		GenerateBlocks();
 
-		player_->switchNumber_ = 1;
+		player_->SetSwitchNumber(1); // ⭕ Setter経由で変更
 
-		if (input_->TriggerKey(DIK_H)) {
-			player_->switchNumber_ = 0;
+        if (input_->TriggerKey(DIK_H)) {
+            player_->SetSwitchNumber(0);
 		}
 	}
 
-	if (player_->switchNumber_ == 2) {
+	if (player_->GetSwitchNumber() == 2) {
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 				delete worldTransformBlock;
@@ -222,10 +223,10 @@ void GameScene::SwitchStage() {
 		mapChipField_->LoadMapChipCsv("Resources/MapTest1.csv");
 		GenerateBlocks();
 
-		player_->switchNumber_ = 2;
+		player_->SetSwitchNumber(2); 
 
 		if (input_->TriggerKey(DIK_H)) {
-			player_->switchNumber_ = 1;
+			player_->SetSwitchNumber(1);
 		}
 	}
 

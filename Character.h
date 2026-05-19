@@ -3,6 +3,8 @@
 #include <3d/WorldTransform.h>
 #include <3d/Camera.h>
 
+class MapChipField; // 前方宣言
+
 // すべてのキャラクターの「親」となるクラス
 class Character {
 public:
@@ -21,6 +23,13 @@ public:
 
     // 共通のゲッター
     const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
+
+    // MapChipField をセットする仮想関数を追加
+    virtual void SetMapChipField(MapChipField* mapChipField) {}
+
+    // ステージ切り替え用のセッター/ゲッター
+    virtual void SetSwitchNumber(int number) {}
+    virtual int GetSwitchNumber() const { return 0; }
 
 protected:
     // 子クラス（Playerなど）から直接アクセスできるようにメンバ変数は protected にする
