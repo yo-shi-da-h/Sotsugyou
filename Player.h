@@ -16,23 +16,41 @@ class MapChipField;
 
 class Player {
 public:
-	// 左右
-	enum class LRDirection {
-		kRight,
-		kLeft,
-	};
+	// 左右（外部の描画クラス等で使う可能性があるならpublicでOK）
+	enum class LRDirection { kRight, kLeft };
 
-	// 角
+	// 外部から呼び出す基本関数
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* viewProjection, const KamataEngine::Vector3& position);
+	void Update();
+	void Draw();
+
+	// 外部に安全に公開するGetter / Setter
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
+	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
+	const KamataEngine::Vector3& GetPlayerPosition() const { return worldTransform_.translation_; }
+	KamataEngine::Vector3 GetWorldPosition();
+	AABB GetAABB();
+
+	// 状態のGetter
+	bool IsDead() const { return isDead_; }
+	bool IsClear() const { return isClear_; }
+	bool IsDoorInteract() const { return isDoorInteract_; }
+	int GetItemCount() const { return itemCount_; }
+	int GetItemBatteryCount() const { return itemBatteryCount_; }
+
+	// 外部から状態を変化させるための適切な関数
+	void AddItem() { itemCount_++; }
+	void AddBattery() { itemBatteryCount_++; }
+	bool Dead();
+
+private:
+	// 内部だけで使う角の定義
 	enum Corner {
-		kRightBottom, // 右下
-		kLeftBottom,  // 左下
-		kRightTop,    // 右上
-		kLeftTop,     // 左上
-
-		kNumCorner // 要素数
+		kRightBottom, kLeftBottom, kRightTop, kLeftTop, kNumCorner
 	};
 
-	// 角
+	// 内部だけで使う衝突用構造体
 	struct CollisionMapInfo {
 		bool hitCeilingFlag = false;
 		bool landingFlag = false;
@@ -40,139 +58,74 @@ public:
 		KamataEngine::Vector3 movement;
 	};
 
-	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* viewProjection, const KamataEngine::Vector3& position);
-
-	void Update();
-
-	void Draw();
-
-	void UpdateBlockAndTrapPosition(KamataEngine::WorldTransform& worldTransform, MapChipField* mapChipField, float fallSpeed);
-
-
-	// void Rotate();
-
-	// seteer
-	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
-	// getter
-	const KamataEngine::WorldTransform& GetWorldTransform() { return worldTransform_; }
-	KamataEngine::Vector3& GetVelocity() { return velocity_; }
-
-	const KamataEngine::Vector3& GetPlayerPosition() const { return worldTransform_.translation_; }
-
-	// 2-10
-	//   ワールド座標を取得する関数
-	KamataEngine::Vector3 GetWorldPosition();
-	// AABBを取得する関数
-	AABB GetAABB();
-
+	// 内部の更新用サブ関数（すべてprivateに隠蔽）
 	void MovePlayer();
-
 	void CheckMapCollision(CollisionMapInfo& info);
 	void CheckMapCollisionUp(CollisionMapInfo& info);
 	void CheckMapCollisionDown(CollisionMapInfo& info);
 	void CheckMapCollisionLeft(CollisionMapInfo& info);
 	void CheckMapCollisionRight(CollisionMapInfo& info);
-
 	void JudgmentMove(const CollisionMapInfo& info);
-
 	void CeilingContact(const CollisionMapInfo& info);
-
 	void GraundSetting(const CollisionMapInfo& info);
-
 	void TurnControll();
-
 	KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
-
-	bool Dead();
-
-	// デスフラグのgetter
-	bool IsDead() const { return isDead_; }
-
-	// クリアフラグのgetter
-	bool IsClear() const { return isClear_; }
-
-	bool IsDoorInteract() const { return isDoorInteract_; }
-
-	int itemCount = 0;
-	int itemBateryCount = 0;
-
-	int switchNumber_ = 0;
-
-	bool isFrontDoor = false;
-	bool isFrontDoor1 = false;
+	void UpdateBlockAndTrapPosition(KamataEngine::WorldTransform& worldTransform, MapChipField* mapChipField, float fallSpeed);
 
 private:
+	// メンバ変数はすべてprivate
 	KamataEngine::Vector3 worldPos_;
 	float radius_;
-
 	bool onGround_ = true;
-	// bool TamaFlag_ = false;
-
 	bool isDead_ = false;
 	bool isClear_ = false;
-	bool isDoorInteract_=false;
+	bool isDoorInteract_ = false;
+
+	int itemCount_ = 0;
+	int itemBatteryCount_ = 0;
+	int switchNumber_ = 0;
+	bool isFrontDoor_ = false;
+	bool isFrontDoor1_ = false;
 
 	KamataEngine::Input* input_ = nullptr;
 	KamataEngine::Audio* audio_ = nullptr;
 
-	// ワールド変換データ
+	// ワールド変換データ・モデル等
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::WorldTransform worldTransform2_;
 	KamataEngine::WorldTransform worldTransform3_;
 	KamataEngine::WorldTransform worldTransform4_;
-
-	// モデル
 	KamataEngine::Model* model_ = nullptr;
-	KamataEngine::Model* model2_ = nullptr;//interact
+	KamataEngine::Model* model2_ = nullptr;
 	KamataEngine::Camera* playerCamera_ = nullptr;
 
-	// KamataEngine::Model* bulletmodel_ = nullptr;
-	//CameraController* camera_ = nullptr;
-
 	KamataEngine::Vector3 velocity_ = {};
-
 	LRDirection lrDirection_ = LRDirection::kRight;
-	// 旋回開始時の角度
 	float turnFirstRotationY_ = 0.0f;
-	// 旋回タイマー
 	float turnTimer_ = 0.0f;
-
 	bool isItemActive_ = false;
 	float deltaTime = 0.0f;
-
 	MapChipField* mapChipField_ = nullptr;
 
+	// 音声
 	uint32_t soundSE_ = 0;
 	uint32_t soundSEHanlde_ = 0;
 	bool soundFlag = false;
-
 	uint32_t shotSE_ = 0;
 	uint32_t shotHandle_ = 0;
 
-	// プレイヤーの移動加速度
+	// 定数群
 	static inline const float kAcceleration = 1.0f;
-	// プレイヤーが停止する際の減速率
 	static inline const float kAttenuation = 0.2f;
-	// ジャンプ時の加速度
 	static inline const float kJumpAcceleration = 0.9f;
-	// 重力による加速度
 	static inline const float kGravityAcceleration = 0.04f;
-	// 壁に衝突した際の減速率
 	static inline const float kAttenuationWall = 0.2f;
-	// 着地時の減速率
 	static inline const float kAttenuationLanding = 0.7f;
-	// 落下速度の制限値
 	static inline const float kLimitFallSpeed = 1.0f;
-	// 走行速度の制限値
 	static inline const float kLimitRunSpeed = 0.5f;
-	// ターンするのにかかる時間
 	static inline const float kTimeTurn = 0.5f;
-	// プレイヤーの幅
 	static inline const float kWidth = 0.8f;
-	// プレイヤーの高さ
 	static inline const float kHeight = 1.0f;
-	// 隙間の幅（適切な値に修正する必要あり）
 	static inline const float kBlank = 2.0f;
-	// 地面を探す際の高さ
 	static inline const float kGroundSearchHeight = 0.0f;
 };
